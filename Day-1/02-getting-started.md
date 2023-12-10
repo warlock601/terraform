@@ -26,4 +26,6 @@ You configure providers in your Terraform code to interact with the desired infr
 
 11. **Remote Backend**: A remote backend is a storage location for your Terraform state files that is not stored locally. Popular choices for remote backends include Amazon S3, Azure Blob Storage, or HashiCorp Terraform Cloud. Remote backends enhance collaboration and provide better security and reliability for your state files.
 
+12. .tfstate (Terraform state file) : Terraform creates this file to keep a record of whatever it has created. Basically to record info.  
+
 These are some of the essential terms you'll encounter when working with Terraform. As you start using Terraform for your infrastructure provisioning and management, you'll become more familiar with these concepts and how they fit together in your IaC workflows.
