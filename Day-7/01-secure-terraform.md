@@ -5,10 +5,33 @@ There are a few ways to manage sensitive information in Terraform files. Here ar
 ## Use the sensitive attribute
 
 - Terraform provides a sensitive attribute that can be used to mark variables and outputs as sensitive. When a variable or output is marked as sensitive, Terraform will not print its value in the console output or in the state file.
+```hcl
+output "app_password" {
+  value     = data.vault_kv_secret_v2.app_config.data["password"]
+  sensitive = true
+}
+```
 
 ## Secret management system
 
 - Store sensitive data in a secret management system. A secret management system is a dedicated system for storing sensitive data, such as passwords, API keys, and SSH keys. Terraform can be configured to read secrets from a secret management system, such as HashiCorp Vault or AWS Secrets Manager.
+
+- We can create secrets in AWS Secrets Manager and then later fetch them using data block.
+  Let say we created a secret with name: my-db-secret (contains JSON like {"username":"admin","password":"secret"})
+  ```hcl
+    data "aws_secretsmanager_secret" "db_secret" {
+        passwd = "my-db-secret"
+   }
+
+  ```
+  Later we can use it somewhere
+  ```hcl
+  resource "aws_rds_db "web" {
+  password = aws_secretsmanager_secret.db_secret.passwd
+  
+  }
+  ```
+ 
 
 ## Remote Backend
 
