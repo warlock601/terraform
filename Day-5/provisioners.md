@@ -1,4 +1,5 @@
-Certainly, let's delve deeper into the `file`, `remote-exec`, and `local-exec` provisioners in Terraform, along with examples for each.
+Certainly, let's delve deeper into the `file`, `remote-exec`, and `local-exec` provisioners in Terraform, along with examples for each. Provisioners are executed inside the 
+resource block.
 
 1. **file Provisioner:**
 
@@ -10,7 +11,7 @@ Certainly, let's delve deeper into the `file`, `remote-exec`, and `local-exec` p
    resource "aws_instance" "example" {
      ami           = "ami-0c55b159cbfafe1f0"
      instance_type = "t2.micro"
-   }
+   
 
    provisioner "file" {
      source      = "local/path/to/localfile.txt"
@@ -20,6 +21,7 @@ Certainly, let's delve deeper into the `file`, `remote-exec`, and `local-exec` p
        user     = "ec2-user"
        private_key = file("~/.ssh/id_rsa")
      }
+   }
    }
    ```
 
@@ -35,7 +37,7 @@ Certainly, let's delve deeper into the `file`, `remote-exec`, and `local-exec` p
    resource "aws_instance" "example" {
      ami           = "ami-0c55b159cbfafe1f0"
      instance_type = "t2.micro"
-   }
+   
 
    provisioner "remote-exec" {
      inline = [
@@ -50,6 +52,7 @@ Certainly, let's delve deeper into the `file`, `remote-exec`, and `local-exec` p
        private_key = file("~/.ssh/id_rsa")
        host        = aws_instance.example.public_ip
      }
+   }
    }
    ```
 
