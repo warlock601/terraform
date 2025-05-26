@@ -20,6 +20,7 @@ In this example:
 - `description` provides a human-readable description of the variable.
 - `type` specifies the data type of the variable (e.g., `string`, `number`, `list`, `map`, etc.).
 - `default` provides a default value for the variable, which is optional.
+- All the fields are optional in input variables, there are no required fields.
 
 You can then use the input variable within your module or configuration like this:
 
