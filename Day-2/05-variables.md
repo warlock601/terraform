@@ -40,7 +40,7 @@ Output variables allow you to expose values from your module or configuration, m
 ```hcl
 output "example_output" {
   description = "An example output variable"
-  value       = resource.example_resource.example.id
+  value       = resource_type.resource_name.parameter      //eg: value = aws_instance.instance1.public_ip
 }
 ```
 
