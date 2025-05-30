@@ -95,7 +95,15 @@ resource "null_resource" "seed_db" {
   depends_on = [aws_db_instance.mysql]
 }
 ```
+Here’s what’s happening:
 
+null_resource.seed_db is just a dummy resource to run a local script.
+
+This script connects to the RDS instance and seeds data. 
+
+depends_on is used to tell terraform:  “Do not run this until that is completely finished.”
+</br>
+</br>
 - Upload a file to S3 using AWS CLI.
 ```hcl
 resource "aws_s3_bucket" "example" {
