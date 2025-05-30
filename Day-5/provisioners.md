@@ -20,7 +20,7 @@ We can use provisioners in Terraform only on resources that have a compute/SSH c
      connection {
        type     = "ssh"
        user     = "ec2-user"
-       private_key = file("~/.ssh/id_rsa")
+       private_key = file("~/.ssh/id_rsa")             # "~" stands for: "home directory of the current user"
      }
    }
    }
