@@ -1,5 +1,6 @@
 Certainly, let's delve deeper into the `file`, `remote-exec`, and `local-exec` provisioners in Terraform, along with examples for each. Provisioners are executed inside the 
-resource block.
+resource block. </br>
+We can use provisioners in Terraform only on resources that have a compute/SSH context, like EC2 instances, VMs, etc. But for resources like S3 buckets, you cannot use provisioners (like file or remote-exec).
 
 1. **file Provisioner:**
 
@@ -77,3 +78,47 @@ resource block.
    ```
 
    In this example, a `null_resource` is used with a `local-exec` provisioner to run a simple local command that echoes a message to the console whenever Terraform is applied or refreshed. The `timestamp()` function ensures it runs each time.
+</br>
+Here are the examples of provisioners that we can use them for other than EC2:
+- Upload a file to S3 using AWS CLI.
+```hcl
+resource "aws_s3_bucket" "example" {
+  bucket = "my-upload-bucket"
+}
+
+resource "null_resource" "upload_file" {
+  provisioner "local-exec" {
+    command = "aws s3 cp ./myfile.txt s3://${aws_s3_bucket.example.bucket}/"
+  }
+
+  depends_on = [aws_s3_bucket.example]
+}
+```
+- You can use local-exec to apply custom kubectl commands after deploying a Kubernetes resource.
+```hcl
+resource "kubernetes_deployment" "app" {
+  # your deployment config
+}
+
+resource "null_resource" "patch_deployment" {
+  provisioner "local-exec" {
+    command = "kubectl patch deployment my-app -p '{\"spec\":{\"replicas\":3}}'"
+  }
+
+  depends_on = [kubernetes_deployment.app]
+}
+```
+- You can provision or seed a database using local-exec after creating the DB instance.
+```hcl
+resource "aws_db_instance" "mysql" {
+  # MySQL config
+}
+
+resource "null_resource" "seed_db" {
+  provisioner "local-exec" {
+    command = "mysql -h ${aws_db_instance.mysql.endpoint} -u admin -pMySecret < ./seed.sql"
+  }
+
+  depends_on = [aws_db_instance.mysql]
+}
+```
