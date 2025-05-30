@@ -18,6 +18,9 @@ Terraform is an Infrastructure as Code (IaC) tool used to define and provision i
 
 2. **Versioning Complexity**: Managing state files in VCS can lead to complex versioning issues, especially when multiple team members are working on the same infrastructure.
 Let say one of the person in your team cloned the repo, did some changes to the infra and then did terraform apply, so there will be 2 changes: one to the main.tf (or any other config file) and terraform.tfstate. Now he will need to commit both the files. If he commits only the main.tf, next time if someone pulls the changes and then does terraform plan, he/she will be shown that resources as pending changes and need to apply for that to be recorded in terraform.tfstate.
+Basically, Terraform checks the .tf files and finds a resource definition and then Terraform will think that this resource is new and needs to be created.
+This is how terraform performs checks for the infra: First Reads .tf files (your desired state) > Reads the terraform.tfstate file (current known state) > Connects to the cloud provider (real-world infrastructure) and verifies whether the resources in state still exist.
+
 
 **Overcoming Disadvantages with Remote Backends (e.g., S3):**
 
