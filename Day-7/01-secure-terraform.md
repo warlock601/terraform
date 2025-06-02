@@ -17,21 +17,38 @@ output "app_password" {
 - Store sensitive data in a secret management system. A secret management system is a dedicated system for storing sensitive data, such as passwords, API keys, and SSH keys. Terraform can be configured to read secrets from a secret management system, such as HashiCorp Vault or AWS Secrets Manager.
 
 - We can create secrets in AWS Secrets Manager and then later fetch them using data block.
-  Let say we created a secret with name: my-db-secret (contains JSON like {"username":"admin","password":"secret"})
+- First get the secret metadata.
   ```hcl
     data "aws_secretsmanager_secret" "db_secret" {
-        name = "my-db-secret"
-   }
+  name = "my-postgres-secret"
+    }
 
   ```
-  Later we can use it somewhere
+- Fetch the Actual Secret Value
   ```hcl
-  resource "aws_rds_db "web" {
-  password = aws_secretsmanager_secret.db_secret.passwd
-  
+  data "aws_secretsmanager_secret_version" "db_secret_version" {
+  secret_id = data.aws_secretsmanager_secret.db_secret.id
   }
+
   ```
- 
+- Parse the JSON to Extract db_password
+```hcl
+locals {
+  db_secrets = jsondecode(data.aws_secretsmanager_secret_version.db_secret_version.secret_string)
+}
+```
+- Use It in Your PostgreSQL Resource.
+```hcl
+resource "aws_db_instance" "postgres_db" {
+  allocated_storage    = 20
+  engine               = "postgres"
+  engine_version       = "15.3"
+  instance_class       = "db.t3.micro"
+  name                 = "mydatabase"
+  username             = "postgres"
+  password             = local.db_secrets.db_password
+}
+``` 
 
 ## Remote Backend
 
