@@ -20,7 +20,7 @@ output "app_password" {
   Let say we created a secret with name: my-db-secret (contains JSON like {"username":"admin","password":"secret"})
   ```hcl
     data "aws_secretsmanager_secret" "db_secret" {
-        passwd = "my-db-secret"
+        name = "my-db-secret"
    }
 
   ```
