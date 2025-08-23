@@ -29,3 +29,25 @@ terraform apply -var-file=dev.tfvars
 ```
 
 By using `.tfvars` files, you can keep your Terraform code more generic and flexible while tailoring configurations to different scenarios and environments.
+
+## Storing real secrets inside .tfvars and committing them to Git is a huge security risk. So there are 3 ways to achieve this:
+- Add .tfvars files with secrets to .gitignore so they never get committed. First we put "sensitive=true" inside the variable block for any secret and then put its value inside .tfvars and put .tfvars inside .gitignore.
+```hcl
+# variables.tf
+variable "aws_access_key" {
+  type      = string
+  sensitive = true
+}
+
+variable "aws_secret_key" {
+  type      = string
+  sensitive = true
+}
+```
+
+```hcl
+# secrets.tfvars
+aws_access_key = "AKIA123..."
+aws_secret_key = "abcd1234..."
+```
+- Store .tfvars securely in S3. 
