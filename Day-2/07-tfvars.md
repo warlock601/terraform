@@ -36,7 +36,7 @@ By using `.tfvars` files, you can keep your Terraform code more generic and flex
 # variables.tf
 variable "aws_access_key" {
   type      = string
-  sensitive = true
+  sensitive = true      
 }
 
 variable "aws_secret_key" {
@@ -50,4 +50,18 @@ variable "aws_secret_key" {
 aws_access_key = "AKIA123..."
 aws_secret_key = "abcd1234..."
 ```
-- Store .tfvars securely in S3. 
+"sensitive = true" makes sure that when a specific resource is created, all these values will not be displayed. 
+- Store .tfvars securely in S3. We you can store .tfvars in S3 bucket and pull it before running Terraform:
+```sh
+# Upload to S3
+aws s3 cp secrets.tfvars s3://my-secure-bucket/terraform/secrets.tfvars
+```
+
+```sh
+# Downliad before Terraform Apply
+aws s3 cp s3://my-secure-bucket/terraform/secrets.tfvars ./secrets.tfvars
+terraform apply -var-file=secrets.tfvars
+```
+This also becomes very hectic process as every time we want to do apply, we need pull the .tfvars from S3 and if we forget, it will use the default values.
+
+- 
