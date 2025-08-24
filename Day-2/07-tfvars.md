@@ -64,4 +64,16 @@ terraform apply -var-file=secrets.tfvars
 ```
 We can also use SSE-KMS encryption inside S3 bucket to store these values securely inside S3. 
 
-- 
+- Instead of .tfvars, use secret managers: AWS SSM Parameter Store or AWS Secrets Manager, HashiCorp Vault. If we were to have secrets in .tfvars so instead we can use these secret managers as they provide additional functionalities like expiration, secret rotation etc.
+```hcl
+data "aws_ssm_parameter" "db_password" {
+  name = "/myapp/db_password"
+  with_decryption = true
+}
+
+variable "db_password" {
+  type      = string
+  sensitive = true
+  default   = data.aws_ssm_parameter.db_password.value
+}
+```
